@@ -2,330 +2,935 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>SvenDLC — Чит для Minecraft 1.16.5 / 1.21.4 / 1.21.1</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SvenDLC - Premium Client</title>
     <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #12121a;
+            --surface2: #1a1a28;
+            --accent: #a855f7;
+            --accent2: #7c3aed;
+            --gold: #f59e0b;
+            --text: #e2e8f0;
+            --text2: #94a3b8;
+            --red: #ef4444;
+            --green: #22c55e;
+            --blue: #3b82f6;
+            --border: #1e1e30;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --font: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            --shadow: 0 4px 24px rgba(0,0,0,0.5);
+            --glow: 0 0 20px rgba(168,85,247,0.3);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #fff; overflow-x: hidden; }
-        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
-        .noise { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: repeating-radial-gradient(circle at 20% 30%, rgba(0,0,0,0.2), rgba(0,0,0,0.2) 2px, transparent 2px, transparent 4px); pointer-events: none; z-index: 1; }
-        .content { position: relative; z-index: 2; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(2px); padding-top: 80px; }
-        .navbar { position: fixed; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 16px 40px; background: rgba(10,10,20,0.8); backdrop-filter: blur(12px); z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.1); box-sizing: border-box; }
-        .nav-logo { display: flex; align-items: center; gap: 12px; font-size: 1.5rem; font-weight: 800; background: linear-gradient(45deg, #fff, #ff4b2b); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .nav-logo i { color: #ff4b2b; background: none; }
-        .nav-links { display: flex; gap: 32px; }
-        .nav-link { color: #fff; text-decoration: none; font-weight: 500; transition: all 0.2s cubic-bezier(0.2,0.9,0.4,1.1); padding: 8px 0; cursor: pointer; }
-        .nav-link:hover { color: #ff4b2b; transform: translateY(-3px) scale(1.02); }
-        .nav-icons { display: flex; gap: 20px; }
-        .nav-icon { color: #fff; font-size: 1.4rem; cursor: pointer; transition: all 0.2s cubic-bezier(0.2,0.9,0.4,1.1); width: 40px; text-align: center; }
-        .nav-icon:hover { color: #ff4b2b; transform: translateY(-3px) scale(1.1); }
-        .version-selector { display: flex; gap: 20px; margin: 30px 0; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 60px; backdrop-filter: blur(5px); }
-        .version-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 10px 24px; border-radius: 40px; color: white; cursor: pointer; font-weight: bold; transition: all 0.2s ease; }
-        .version-btn.active { background: linear-gradient(45deg, #ff416c, #ff4b2b); border-color: transparent; box-shadow: 0 0 15px rgba(255,75,43,0.5); }
-        .version-btn:hover { transform: translateY(-3px); }
-        .glitch { font-size: 6rem; font-weight: 800; text-transform: uppercase; text-align: center; background: linear-gradient(45deg, #ffffff, #ff4b2b, #ff416c); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shine 3s linear infinite; }
-        @keyframes shine { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
-        .btn { padding: 14px 32px; font-size: 1rem; font-weight: 600; border: none; border-radius: 40px; cursor: pointer; transition: all 0.2s cubic-bezier(0.2,0.9,0.4,1.1); font-family: inherit; }
-        .btn-primary { background: linear-gradient(45deg, #ff416c, #ff4b2b); color: white; box-shadow: 0 4px 15px rgba(255,75,43,0.3); }
-        .btn-primary:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 8px 25px rgba(255,75,43,0.5); }
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; max-width: 1200px; margin: 40px auto; padding: 0 20px; }
-        .feature-card { background: rgba(20,20,40,0.6); backdrop-filter: blur(10px); border-radius: 24px; padding: 30px; transition: all 0.25s cubic-bezier(0.2,0.9,0.4,1.1); border: 1px solid rgba(255,255,255,0.1); text-align: center; cursor: pointer; }
-        .feature-card:hover { transform: translateY(-8px) scale(1.02); border-color: rgba(255,75,43,0.5); }
-        .feature-card i { font-size: 3rem; margin-bottom: 20px; background: linear-gradient(45deg, #ff416c, #ff4b2b); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .modal { display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
-        .modal-content { background: #1a1a2e; padding: 32px; border-radius: 24px; width: 90%; max-width: 450px; border: 1px solid rgba(255,255,255,0.2); }
-        .profile-field { margin: 10px 0; padding: 8px; background: #2a2a3e; border-radius: 12px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; background: #2a2a3e; border: 1px solid #3a3a4e; border-radius: 12px; color: white; }
-        .btn-modal { width: 100%; padding: 12px; background: linear-gradient(45deg, #ff416c, #ff4b2b); border: none; border-radius: 40px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .close { float: right; font-size: 28px; cursor: pointer; }
-        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: rgba(0,0,0,0.8); padding: 12px 24px; border-radius: 40px; transition: transform 0.3s ease; z-index: 100; }
-        .toast.show { transform: translateX(-50%) translateY(0); }
-        @media (max-width: 768px) { .glitch { font-size: 2.5rem; } .nav-links { display: none; } }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Three.js Canvas */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Particles overlay */
+        .particles-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* Main container */
+        .main-container {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            background: rgba(18,18,26,0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(168,85,247,0.3); }
+            50% { box-shadow: 0 0 40px rgba(168,85,247,0.6); }
+        }
+
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: var(--glow);
+            animation: pulse 2s infinite;
+        }
+        .logo-text { background: linear-gradient(135deg, #c084fc, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .nav-links { display: flex; gap: 8px; flex-wrap: wrap; }
+        .nav-btn {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            font-family: var(--font);
+        }
+        .nav-btn:hover { border-color: var(--accent); background: rgba(168,85,247,0.1); box-shadow: var(--glow); }
+        .nav-btn.active { background: linear-gradient(135deg, var(--accent), var(--accent2)); border-color: transparent; color: #fff; }
+
+        /* Cards */
+        .card {
+            background: rgba(18,18,26,0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            animation: fadeInUp 0.5s ease-out;
+            transition: all 0.3s;
+        }
+        .card:hover { border-color: rgba(168,85,247,0.3); }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-title .icon { font-size: 24px; }
+
+        /* Grid */
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+
+        /* Form elements */
+        .input-group { margin-bottom: 16px; }
+        .input-group label { display: block; margin-bottom: 6px; font-size: 13px; color: var(--text2); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--text);
+            font-size: 15px;
+            font-family: var(--font);
+            transition: all 0.3s;
+            outline: none;
+        }
+        .input-group input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(168,85,247,0.15); }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: var(--font);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+        }
+        .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; box-shadow: 0 4px 15px rgba(168,85,247,0.4); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(168,85,247,0.6); }
+        .btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+        .btn-outline:hover { background: rgba(168,85,247,0.1); }
+        .btn-danger { background: var(--red); color: #fff; }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-success { background: var(--green); color: #fff; }
+        .btn-sm { padding: 8px 16px; font-size: 13px; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+        /* Status badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge-success { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+        .badge-warning { background: rgba(245,158,11,0.15); color: var(--gold); border: 1px solid rgba(245,158,11,0.3); }
+        .badge-danger { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+        .badge-info { background: rgba(59,130,246,0.15); color: var(--blue); border: 1px solid rgba(59,130,246,0.3); }
+
+        /* Profile */
+        .profile-info { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .profile-field { padding: 12px; background: var(--surface2); border-radius: var(--radius-sm); border: 1px solid var(--border); }
+        .profile-field .label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; }
+        .profile-field .value { font-size: 16px; font-weight: 600; margin-top: 4px; word-break: break-all; }
+
+        /* Version buttons */
+        .version-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+        .version-btn {
+            padding: 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--text);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            font-family: var(--font);
+            font-weight: 600;
+        }
+        .version-btn:hover { border-color: var(--accent); background: rgba(168,85,247,0.1); transform: translateY(-2px); }
+        .version-btn.selected { background: linear-gradient(135deg, var(--accent), var(--accent2)); border-color: transparent; color: #fff; box-shadow: var(--glow); }
+
+        /* Admin panel */
+        .admin-panel { display: none; }
+        .admin-panel.visible { display: block; }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 14px 20px;
+            border-radius: var(--radius-sm);
+            color: #fff;
+            font-weight: 500;
+            z-index: 1000;
+            animation: slideInRight 0.3s ease-out;
+            box-shadow: var(--shadow);
+            font-family: var(--font);
+            font-size: 14px;
+        }
+        .toast-success { background: var(--green); }
+        .toast-error { background: var(--red); }
+        .toast-info { background: var(--blue); }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header { flex-direction: column; gap: 12px; }
+            .nav-links { justify-content: center; }
+            .profile-info { grid-template-columns: 1fr; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .grid-3 { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 480px) {
+            .grid-3 { grid-template-columns: 1fr; }
+            .version-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        /* Loading spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin-slow 0.6s linear infinite;
+            display: inline-block;
+        }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
+
+    <!-- Three.js Canvas -->
     <canvas id="bg-canvas"></canvas>
-    <div class="noise"></div>
 
-    <nav class="navbar">
-        <div class="nav-logo"><i class="fas fa-skull"></i><span>SvenDLC</span></div>
-        <div class="nav-links">
-            <a class="nav-link" data-page="home">Главная</a>
-            <a class="nav-link" data-page="features">Возможности</a>
-            <a class="nav-link" data-page="download">Скачать</a>
-        </div>
-        <div class="nav-icons">
-            <a class="nav-icon" id="supportBtn"><i class="fas fa-headset"></i></a>
-            <div class="nav-icon" id="userBtn"><i class="fas fa-user"></i></div>
-        </div>
-    </nav>
-
-    <div id="supportModal" class="modal"><div class="modal-content"><span class="close">&times;</span><h2>Поддержка</h2><p>Telegram: @svendlc</p><p>Discord: discord.gg/svendlc</p></div></div>
-    
-    <div id="authModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div id="authForm">
-                <h2 id="authTitle">Вход</h2>
-                <input type="text" id="authLogin" placeholder="Логин">
-                <input type="email" id="authEmail" placeholder="Email">
-                <input type="password" id="authPassword" placeholder="Пароль">
-                <button id="authSubmitBtn" class="btn-modal">Войти</button>
-                <p id="authMessage"></p>
-                <button id="authToggleBtn" class="btn-modal" style="background:transparent;">Нет аккаунта? Регистрация</button>
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">⚔️</div>
+                <span class="logo-text">SvenDLC</span>
             </div>
-            <div id="profileInfo" style="display:none;">
-                <h2>Профиль</h2>
-                <div class="profile-field"><strong>UID:</strong> <span id="profileUid"></span></div>
-                <div class="profile-field"><strong>Логин:</strong> <span id="profileLogin"></span></div>
-                <div class="profile-field"><strong>Email:</strong> <span id="profileEmail"></span></div>
-                <div class="profile-field"><strong>Группа:</strong> <span id="profileGroup"></span></div>
-                <div class="profile-field"><strong>Подписка до:</strong> <span id="profileExpires"></span></div>
-                <div class="profile-field"><strong>HWID:</strong> <span id="profileHwid"></span></div>
-                <input type="text" id="licenseKeyInput" placeholder="Введите ключ активации">
-                <button id="activateLicenseBtn" class="btn-modal">Активировать ключ</button>
-                <button id="logoutBtn" class="btn-modal" style="background:#333;">Выйти</button>
+            <nav class="nav-links">
+                <button class="nav-btn active" data-tab="home">🏠 Главная</button>
+                <button class="nav-btn" data-tab="profile">👤 Профиль</button>
+                <button class="nav-btn" data-tab="versions">📦 Версии</button>
+                <button class="nav-btn" data-tab="activate">🔑 Активация</button>
+                <button class="nav-btn" data-tab="download">⬇️ Скачать</button>
+            </nav>
+        </header>
+
+        <!-- Tab: Home -->
+        <div id="tab-home" class="tab-content">
+            <div class="card" style="text-align:center; padding: 48px 28px;">
+                <div style="font-size: 56px; margin-bottom: 16px;">⚔️</div>
+                <h1 style="font-size: 36px; font-weight: 800; margin-bottom: 8px; background: linear-gradient(135deg, #c084fc, #a855f7, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">SvenDLC Client</h1>
+                <p style="color: var(--text2); font-size: 16px; margin-bottom: 24px;">Лучший Minecraft клиент с уникальными возможностями</p>
+                <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+                    <button class="btn btn-primary" onclick="switchTab('versions')">📦 Выбрать версию</button>
+                    <button class="btn btn-outline" onclick="switchTab('profile')">👤 Мой профиль</button>
+                </div>
+            </div>
+
+            <div class="grid-3">
+                <div class="card" style="text-align:center;">
+                    <div style="font-size:36px;">🚀</div>
+                    <h3>Высокая производительность</h3>
+                    <p style="color:var(--text2); font-size:14px;">Оптимизировано для максимального FPS</p>
+                </div>
+                <div class="card" style="text-align:center;">
+                    <div style="font-size:36px;">🛡️</div>
+                    <h3>Защита HWID</h3>
+                    <p style="color:var(--text2); font-size:14px;">Привязка к вашему железу</p>
+                </div>
+                <div class="card" style="text-align:center;">
+                    <div style="font-size:36px;">🎨</div>
+                    <h3>Кастомизация</h3>
+                    <p style="color:var(--text2); font-size:14px;">Гибкие настройки интерфейса</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Profile -->
+        <div id="tab-profile" class="tab-content hidden">
+            <div class="card">
+                <div class="card-title"><span class="icon">👤</span> Профиль пользователя</div>
+                <div id="profile-content">
+                    <p style="color:var(--text2);">Войдите в аккаунт для просмотра профиля</p>
+                    <div class="input-group" style="max-width:400px;">
+                        <label>UID пользователя</label>
+                        <input type="text" id="profile-uid-input" placeholder="Введите ваш UID...">
+                    </div>
+                    <button class="btn btn-primary" onclick="loadProfile()">🔍 Загрузить профиль</button>
+                </div>
+                <div id="profile-data" class="hidden">
+                    <div class="profile-info">
+                        <div class="profile-field"><span class="label">UID</span><div class="value" id="p-uid">-</div></div>
+                        <div class="profile-field"><span class="label">Логин</span><div class="value" id="p-login">-</div></div>
+                        <div class="profile-field"><span class="label">Подписка</span><div class="value" id="p-sub">-</div></div>
+                        <div class="profile-field"><span class="label">HWID</span><div class="value" id="p-hwid">-</div></div>
+                        <div class="profile-field"><span class="label">Статус</span><div class="value" id="p-status">-</div></div>
+                        <div class="profile-field"><span class="label">Дата регистрации</span><div class="value" id="p-date">-</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Versions -->
+        <div id="tab-versions" class="tab-content hidden">
+            <div class="card">
+                <div class="card-title"><span class="icon">📦</span> Доступные версии</div>
+                <div id="versions-grid" class="version-grid">
+                    <p style="color:var(--text2);">Загрузка версий...</p>
+                </div>
+                <div style="margin-top:16px; display:flex; gap:8px; flex-wrap:wrap;">
+                    <button class="btn btn-primary" id="btn-download-selected" disabled onclick="downloadSelectedVersion()">⬇️ Скачать выбранную</button>
+                    <button class="btn btn-outline btn-sm" onclick="loadVersions()">🔄 Обновить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Activate -->
+        <div id="tab-activate" class="tab-content hidden">
+            <div class="card">
+                <div class="card-title"><span class="icon">🔑</span> Активация ключа</div>
+                <div class="input-group" style="max-width:500px;">
+                    <label>Ключ активации</label>
+                    <input type="text" id="key-input" placeholder="XXXX-XXXX-XXXX-XXXX">
+                </div>
+                <div class="input-group" style="max-width:500px;">
+                    <label>HWID (будет определён автоматически или введите вручную)</label>
+                    <input type="text" id="hwid-input" placeholder="Автоопределение HWID...">
+                </div>
+                <button class="btn btn-primary" id="btn-activate" onclick="activateKey()">🔓 Активировать</button>
+                <button class="btn btn-outline btn-sm" onclick="detectHWID()">🖥️ Определить HWID</button>
+                <div id="activation-result" style="margin-top:12px;"></div>
+            </div>
+        </div>
+
+        <!-- Tab: Download -->
+        <div id="tab-download" class="tab-content hidden">
+            <div class="card" style="text-align:center;">
+                <div class="card-title" style="justify-content:center;"><span class="icon">⬇️</span> Скачать SvenDLC</div>
+                <p style="color:var(--text2); margin-bottom:16px;">Выберите версию во вкладке "Версии" и нажмите скачать</p>
+                <button class="btn btn-primary" onclick="switchTab('versions')">📦 Перейти к версиям</button>
+            </div>
+        </div>
+
+        <!-- Admin Panel (Shift+A) -->
+        <div id="admin-panel" class="admin-panel card" style="margin-top:20px;">
+            <div class="card-title"><span class="icon">⚙️</span> Админ-панель <span class="badge badge-warning">Admin</span></div>
+            <div class="grid-2">
+                <div>
+                    <h4 style="margin-bottom:8px;">👥 Пользователи</h4>
+                    <div class="input-group">
+                        <label>Поиск по UID</label>
+                        <input type="text" id="admin-search-uid" placeholder="UID пользователя...">
+                    </div>
+                    <button class="btn btn-outline btn-sm" onclick="adminSearchUser()">🔍 Найти</button>
+                    <div id="admin-user-result" style="margin-top:12px;"></div>
+                </div>
+                <div>
+                    <h4 style="margin-bottom:8px;">🔑 Создать ключ</h4>
+                    <div class="input-group">
+                        <label>Тип подписки</label>
+                        <select id="admin-key-type">
+                            <option value="30">30 дней</option>
+                            <option value="90">90 дней</option>
+                            <option value="365">365 дней (год)</option>
+                            <option value="9999">Навсегда</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Количество ключей</label>
+                        <input type="number" id="admin-key-count" value="1" min="1" max="100">
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="adminCreateKeys()">🔑 Сгенерировать</button>
+                    <div id="admin-keys-result" style="margin-top:12px;"></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="adminModal" class="modal"><div class="modal-content"><span class="close">&times;</span><h2>Админ-панель</h2><input type="password" id="adminPass" placeholder="Пароль"><button id="adminLoginBtn" class="btn-modal">Войти</button><div id="adminPanel" style="display:none; margin-top:20px;"><h3>Генерация ключа</h3><select id="keyVersion"><option value="1.16.5">Версия 1.16.5</option><option value="1.21.4">Версия 1.21.4</option><option value="1.21.1">Версия 1.21.1</option></select><button id="genKeyBtn" class="btn-modal">Создать ключ</button><p id="newKeyDisplay" style="margin-top:10px;"></p></div></div></div>
-
-    <div id="mainContent" class="content"></div>
-    <div id="toast" class="toast"></div>
-
+    <!-- Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
     <script>
-        // === API URL ===
-        const API_URL = 'https://svendlc-api.svendlc.workers.dev';
-        
-        // === Глобальные переменные ===
-        let currentUser = null;
-        let selectedVersion = localStorage.getItem('selectedVersion') || '1.16.5';
-        let isLoginMode = true;
-
-        // === 3D ФОН ===
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true });
+        // ==================== THREE.JS BACKGROUND ====================
+        const canvas = document.getElementById('bg-canvas');
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        const geometry = new THREE.TorusGeometry(8, 2, 64, 200);
-        const material = new THREE.MeshStandardMaterial({ color: 0xff3366, emissive: 0x441122 });
-        const torus = new THREE.Mesh(geometry, material);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.z = 8;
+
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0x2a1040, 0.5);
+        scene.add(ambientLight);
+        const pointLight1 = new THREE.PointLight(0xa855f7, 1.5, 20);
+        pointLight1.position.set(3, 2, 4);
+        scene.add(pointLight1);
+        const pointLight2 = new THREE.PointLight(0x7c3aed, 1, 20);
+        pointLight2.position.set(-3, -1, 3);
+        scene.add(pointLight2);
+        const pointLight3 = new THREE.PointLight(0xf59e0b, 0.5, 15);
+        pointLight3.position.set(0, -3, 5);
+        scene.add(pointLight3);
+
+        // Main Torus
+        const torusGeo = new THREE.TorusGeometry(1.8, 0.08, 64, 200);
+        const torusMat = new THREE.MeshStandardMaterial({
+            color: 0xa855f7,
+            emissive: 0x3b0764,
+            emissiveIntensity: 0.6,
+            metalness: 0.3,
+            roughness: 0.2,
+        });
+        const torus = new THREE.Mesh(torusGeo, torusMat);
+        torus.rotation.x = Math.PI / 3;
         scene.add(torus);
+
+        // Second Torus (smaller, opposite rotation)
+        const torus2Geo = new THREE.TorusGeometry(1.4, 0.05, 48, 150);
+        const torus2Mat = new THREE.MeshStandardMaterial({
+            color: 0x7c3aed,
+            emissive: 0x1e0640,
+            emissiveIntensity: 0.4,
+            metalness: 0.4,
+            roughness: 0.15,
+            wireframe: false,
+        });
+        const torus2 = new THREE.Mesh(torus2Geo, torus2Mat);
+        torus2.rotation.x = -Math.PI / 4;
+        torus2.rotation.y = Math.PI / 5;
+        scene.add(torus2);
+
+        // Floating particles
         const particlesGeo = new THREE.BufferGeometry();
-        const posArray = new Float32Array(1500 * 3);
-        for(let i = 0; i < 1500 * 3; i += 3) { posArray[i] = (Math.random() - 0.5) * 200; posArray[i+1] = (Math.random() - 0.5) * 100; posArray[i+2] = (Math.random() - 0.5) * 100; }
-        particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const particles = new THREE.Points(particlesGeo, new THREE.PointsMaterial({ color: 0xff4b2b, size: 0.2, transparent: true, blending: THREE.AdditiveBlending }));
+        const particlesCount = 800;
+        const positions = new Float32Array(particlesCount * 3);
+        const colors = new Float32Array(particlesCount * 3);
+
+        for (let i = 0; i < particlesCount; i++) {
+            positions[i * 3] = (Math.random() - 0.5) * 15;
+            positions[i * 3 + 1] = (Math.random() - 0.5) * 10;
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 8;
+
+            const colorChoice = Math.random();
+            if (colorChoice < 0.5) {
+                colors[i * 3] = 0.66; colors[i * 3 + 1] = 0.33; colors[i * 3 + 2] = 0.97; // purple
+            } else if (colorChoice < 0.8) {
+                colors[i * 3] = 0.49; colors[i * 3 + 1] = 0.23; colors[i * 3 + 2] = 0.93; // deep purple
+            } else {
+                colors[i * 3] = 0.96; colors[i * 3 + 1] = 0.62; colors[i * 3 + 2] = 0.04; // gold
+            }
+        }
+
+        particlesGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particlesGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const particlesMat = new THREE.PointsMaterial({
+            size: 0.025,
+            vertexColors: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            transparent: true,
+            opacity: 0.8,
+        });
+
+        const particles = new THREE.Points(particlesGeo, particlesMat);
         scene.add(particles);
-        const light = new THREE.PointLight(0xff4b2b, 1); light.position.set(10, 10, 10); scene.add(light);
-        scene.add(new THREE.AmbientLight(0x222222));
-        camera.position.z = 30;
-        function animate() { requestAnimationFrame(animate); torus.rotation.x += 0.003; torus.rotation.y += 0.005; particles.rotation.y += 0.0005; renderer.render(scene, camera); }
+
+        // Small orbiting spheres
+        const spheres = [];
+        for (let i = 0; i < 5; i++) {
+            const sphereGeo = new THREE.SphereGeometry(0.06, 16, 16);
+            const sphereMat = new THREE.MeshStandardMaterial({
+                color: i % 2 === 0 ? 0xa855f7 : 0xf59e0b,
+                emissive: i % 2 === 0 ? 0x3b0764 : 0x4a3000,
+                emissiveIntensity: 0.8,
+                metalness: 0.2,
+                roughness: 0.3,
+            });
+            const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+            sphere.userData = {
+                angle: (i / 5) * Math.PI * 2,
+                radius: 2.3 + Math.random() * 0.5,
+                speed: 0.003 + Math.random() * 0.005,
+                yOffset: (Math.random() - 0.5) * 2,
+            };
+            scene.add(sphere);
+            spheres.push(sphere);
+        }
+
+        // Mouse tracking
+        let mouseX = 0, mouseY = 0;
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+        });
+
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const time = Date.now() * 0.001;
+
+            // Rotate toruses
+            torus.rotation.z += 0.004;
+            torus.rotation.x += Math.sin(time * 0.3) * 0.002;
+            torus2.rotation.z -= 0.006;
+            torus2.rotation.y += 0.003;
+
+            // Move particles
+            particles.rotation.y += 0.0008;
+            particles.rotation.x += 0.0004;
+
+            // Animate orbiting spheres
+            spheres.forEach(sphere => {
+                const ud = sphere.userData;
+                ud.angle += ud.speed;
+                sphere.position.x = Math.cos(ud.angle) * ud.radius;
+                sphere.position.z = Math.sin(ud.angle) * ud.radius;
+                sphere.position.y = Math.sin(ud.angle * 2) * ud.yOffset;
+            });
+
+            // Mouse parallax
+            torus.rotation.y += (mouseX * 0.5 - torus.rotation.y) * 0.02;
+            torus.rotation.x += (mouseY * 0.3 - torus.rotation.x + Math.PI / 3) * 0.02;
+            torus2.rotation.x += (mouseY * 0.4 - torus2.rotation.x - Math.PI / 4) * 0.02;
+            particles.rotation.y += mouseX * 0.0003;
+            particles.rotation.x += mouseY * 0.0002;
+
+            // Subtle camera movement
+            camera.position.x += (mouseX * 0.8 - camera.position.x) * 0.02;
+            camera.position.y += (-mouseY * 0.5 - camera.position.y) * 0.02;
+            camera.lookAt(0, 0, 0);
+
+            renderer.render(scene, camera);
+        }
         animate();
-        window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
 
-        // === Функции ===
-        function showToast(msg, isError = false) {
-            const toast = document.getElementById('toast');
-            toast.textContent = msg;
-            toast.style.background = isError ? 'rgba(255,50,50,0.9)' : 'rgba(0,0,0,0.8)';
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
+        // ==================== API CONFIG ====================
+        const API_BASE = 'https://api.svendlc.workers.dev';
+        const API_KEY = 'svendlc-worker-key-2025'; // Замени на реальный ключ
+
+        // ==================== STATE ====================
+        let selectedVersionId = null;
+        let selectedVersionName = null;
+        let currentUser = null;
+
+        // ==================== HELPERS ====================
+        function showToast(message, type = 'info') {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 3500);
         }
 
-        async function loadPage(page) {
-            const container = document.getElementById('mainContent');
-            if(page === 'home') {
-                container.innerHTML = `<div class="hero" style="text-align:center;"><h1 class="glitch">SvenDLC</h1><p class="tagline">Премиум чит для Minecraft</p>
-                <div class="version-selector"><button data-ver="1.16.5" class="version-btn ${selectedVersion === '1.16.5' ? 'active' : ''}">1.16.5</button><button data-ver="1.21.4" class="version-btn ${selectedVersion === '1.21.4' ? 'active' : ''}">1.21.4</button><button data-ver="1.21.1" class="version-btn ${selectedVersion === '1.21.1' ? 'active' : ''}">1.21.1</button></div>
-                <div class="hero-buttons"><button class="btn btn-primary" id="downloadMainBtn"><i class="fas fa-download"></i> Скачать ${selectedVersion}</button><button class="btn btn-secondary" id="featuresMainBtn">Возможности</button></div></div>`;
-                document.querySelectorAll('.version-btn').forEach(btn => btn.onclick = () => { selectedVersion = btn.dataset.ver; localStorage.setItem('selectedVersion', selectedVersion); loadPage('home'); });
-                document.getElementById('downloadMainBtn').onclick = () => showToast(`Скачивание SvenDLC для ${selectedVersion}...`);
-                document.getElementById('featuresMainBtn').onclick = () => loadPage('features');
-            } else if(page === 'features') {
-                container.innerHTML = `<div class="features"><h2>Возможности</h2><div class="features-grid">
-                <div class="feature-card"><i class="fas fa-shield-alt"></i><h3>Анти-бан</h3><p>Обход серверной защиты</p></div>
-                <div class="feature-card"><i class="fas fa-tachometer-alt"></i><h3>2000+ FPS</h3><p>Оптимизация</p></div>
-                <div class="feature-card"><i class="fas fa-eye"></i><h3>ESP / X-Ray</h3><p>Подсветка игроков</p></div>
-                <div class="feature-card"><i class="fas fa-crosshairs"></i><h3>Aimbot</h3><p>Наведение</p></div>
-                </div></div>`;
-            } else if(page === 'download') {
-                container.innerHTML = `<div class="download-section" style="text-align:center;"><div class="feature-card" style="max-width:400px;"><i class="fas fa-download" style="font-size:4rem;"></i><h2>Скачать SvenDLC</h2><p>Версия: ${selectedVersion}</p><button class="btn btn-primary" id="realDownloadBtn">Скачать JAR</button></div></div>`;
-                document.getElementById('realDownloadBtn').onclick = () => showToast(`Скачивание SvenDLC ${selectedVersion}...`);
+        async function apiCall(endpoint, method = 'GET', body = null) {
+            try {
+                const options = {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': API_KEY,
+                    },
+                };
+                if (body) options.body = JSON.stringify(body);
+
+                const response = await fetch(`${API_BASE}${endpoint}`, options);
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error || `HTTP ${response.status}`);
+                }
+                return data;
+            } catch (error) {
+                console.error('API Error:', error);
+                showToast(`Ошибка: ${error.message}`, 'error');
+                throw error;
             }
         }
 
-        async function updateProfileUI() {
-            if(currentUser) {
-                document.getElementById('profileUid').innerText = currentUser.uid;
-                document.getElementById('profileLogin').innerText = currentUser.login;
-                document.getElementById('profileEmail').innerText = currentUser.email;
-                document.getElementById('profileGroup').innerText = currentUser.group_name || 'user';
-                let expiresText = 'Нет';
-                if(currentUser.license_expires) {
-                    const expDate = new Date(currentUser.license_expires * 1000);
-                    const days = Math.ceil((currentUser.license_expires * 1000 - Date.now()) / 86400000);
-                    expiresText = `${days} дней (до ${expDate.toLocaleDateString()})`;
-                }
-                document.getElementById('profileExpires').innerText = expiresText;
-                document.getElementById('profileHwid').innerText = currentUser.hwid || 'Не привязан';
-                document.getElementById('authForm').style.display = 'none';
-                document.getElementById('profileInfo').style.display = 'block';
-                document.getElementById('userBtn').style.color = '#ff4b2b';
-            } else {
-                document.getElementById('authForm').style.display = 'block';
-                document.getElementById('profileInfo').style.display = 'none';
-                document.getElementById('userBtn').style.color = '#fff';
+        // ==================== TABS ====================
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+
+            const tabEl = document.getElementById(`tab-${tabName}`);
+            if (tabEl) tabEl.classList.remove('hidden');
+
+            const navBtn = document.querySelector(`[data-tab="${tabName}"]`);
+            if (navBtn) navBtn.classList.add('active');
+
+            if (tabName === 'versions') loadVersions();
+        }
+
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+        });
+
+        // ==================== PROFILE ====================
+        async function loadProfile() {
+            const uid = document.getElementById('profile-uid-input').value.trim();
+            if (!uid) { showToast('Введите UID', 'error'); return; }
+
+            try {
+                const data = await apiCall(`/api/users/${uid}`);
+                currentUser = data.user || data;
+                displayProfile(currentUser);
+                document.getElementById('profile-content').classList.add('hidden');
+                document.getElementById('profile-data').classList.remove('hidden');
+                showToast('Профиль загружен', 'success');
+            } catch (e) {
+                // ошибка уже показана в apiCall
             }
         }
 
-        // === API ВЫЗОВЫ ===
-        async function register(login, email, password) {
-            const res = await fetch(`${API_URL}/api/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ login, email, password })
-            });
-            return res.json();
+        function displayProfile(user) {
+            document.getElementById('p-uid').textContent = user.uid || user.id || '-';
+            document.getElementById('p-login').textContent = user.login || user.username || '-';
+            document.getElementById('p-sub').textContent = user.subscription || user.sub_type || '-';
+            document.getElementById('p-hwid').textContent = user.hwid || 'Не привязан';
+            document.getElementById('p-status').textContent = user.status || (user.banned ? 'Забанен' : 'Активен');
+            document.getElementById('p-date').textContent = user.created_at || user.reg_date || '-';
         }
 
-        async function login(login, password) {
-            const res = await fetch(`${API_URL}/api/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ login, password })
-            });
-            return res.json();
-        }
+        // ==================== VERSIONS ====================
+        async function loadVersions() {
+            const grid = document.getElementById('versions-grid');
+            grid.innerHTML = '<p style="color:var(--text2);">Загрузка версий...</p>';
 
-        async function activateKey(uid, key) {
-            const res = await fetch(`${API_URL}/api/activate`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ uid, key })
-            });
-            return res.json();
-        }
+            try {
+                const data = await apiCall('/api/versions');
+                const versions = data.versions || data || [];
+                if (versions.length === 0) {
+                                grid.innerHTML = '<p style="color:var(--text2);">Загрузка версий...</p>';
 
-        async function adminGenerateKey(adminKey, version, days) {
-            const res = await fetch(`${API_URL}/api/admin/generate`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ adminKey, version, days })
-            });
-            return res.json();
-        }
-
-        // === Обработчики ===
-        document.getElementById('authToggleBtn').onclick = () => {
-            isLoginMode = !isLoginMode;
-            document.getElementById('authTitle').innerText = isLoginMode ? 'Вход' : 'Регистрация';
-            document.getElementById('authSubmitBtn').innerText = isLoginMode ? 'Войти' : 'Зарегистрироваться';
-        };
-
-        document.getElementById('authSubmitBtn').onclick = async () => {
-            const loginVal = document.getElementById('authLogin').value.trim();
-            const emailVal = document.getElementById('authEmail').value.trim();
-            const passVal = document.getElementById('authPassword').value;
-            
-            if(isLoginMode) {
-                const res = await login(loginVal, passVal);
-                if(res.success) {
-                    currentUser = res.user;
-                    localStorage.setItem('svendlc_current_user', JSON.stringify(currentUser));
-                    updateProfileUI();
-                    document.getElementById('authModal').style.display = 'none';
-                    showToast(`Добро пожаловать, ${currentUser.login}!`);
-                    loadPage('home');
-                } else {
-                    document.getElementById('authMessage').innerText = res.error;
-                }
-            } else {
-                if(!loginVal || !emailVal || !passVal) {
-                    document.getElementById('authMessage').innerText = 'Заполните все поля';
+            try {
+                const data = await apiCall('/api/versions');
+                const versions = data.versions || data || [];
+                if (versions.length === 0) {
+                    grid.innerHTML = '<p style="color:var(--text2);">Нет доступных версий</p>';
                     return;
                 }
-                const res = await register(loginVal, emailVal, passVal);
-                if(res.success) {
-                    const loginRes = await login(loginVal, passVal);
-                    if(loginRes.success) {
-                        currentUser = loginRes.user;
-                        localStorage.setItem('svendlc_current_user', JSON.stringify(currentUser));
-                        updateProfileUI();
-                        document.getElementById('authModal').style.display = 'none';
-                        showToast('Регистрация успешна!');
-                        loadPage('home');
-                    }
+                grid.innerHTML = '';
+                versions.forEach(v => {
+                    const btn = document.createElement('button');
+                    btn.className = 'version-btn';
+                    btn.textContent = v.name || v.version || v;
+                    btn.dataset.id = v.id || v.name || v;
+                    btn.dataset.name = v.name || v.version || v;
+                    btn.onclick = function() {
+                        document.querySelectorAll('.version-btn').forEach(b => b.classList.remove('selected'));
+                        this.classList.add('selected');
+                        selectedVersionId = this.dataset.id;
+                        selectedVersionName = this.dataset.name;
+                        document.getElementById('btn-download-selected').disabled = false;
+                    };
+                    grid.appendChild(btn);
+                });
+                showToast(`Загружено ${versions.length} версий`, 'success');
+            } catch (e) {
+                grid.innerHTML = '<p style="color:var(--red);">Ошибка загрузки версий</p>';
+            }
+        }
+
+        // ==================== DOWNLOAD ====================
+        async function downloadSelectedVersion() {
+            if (!selectedVersionId) {
+                showToast('Сначала выберите версию!', 'error');
+                return;
+            }
+            try {
+                const data = await apiCall(`/api/download/${selectedVersionId}`);
+                if (data.url || data.download_url) {
+                    const link = document.createElement('a');
+                    link.href = data.url || data.download_url;
+                    link.download = `SvenDLC-${selectedVersionName}.jar`;
+                    link.target = '_blank';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    showToast('Загрузка началась!', 'success');
                 } else {
-                    document.getElementById('authMessage').innerText = res.error;
+                    showToast('Ссылка на скачивание не получена', 'error');
+                }
+            } catch (e) {
+                // ошибка показана в apiCall
+            }
+        }
+
+        // ==================== ACTIVATION ====================
+        async function activateKey() {
+            const key = document.getElementById('key-input').value.trim();
+            const hwid = document.getElementById('hwid-input').value.trim();
+
+            if (!key) { showToast('Введите ключ активации', 'error'); return; }
+            if (!hwid) { showToast('Определите HWID или введите вручную', 'error'); return; }
+
+            const btn = document.getElementById('btn-activate');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Активация...';
+
+            try {
+                const data = await apiCall('/api/activate', 'POST', { key, hwid });
+                const resultDiv = document.getElementById('activation-result');
+                if (data.success) {
+                    resultDiv.innerHTML = `<p style="color:var(--green);">✅ ${data.message || 'Ключ успешно активирован!'}</p>`;
+                    if (data.user) {
+                        resultDiv.innerHTML += `<p style="color:var(--text2);">UID: ${data.user.uid || data.user.id}</p>`;
+                    }
+                    showToast('Ключ активирован!', 'success');
+                } else {
+                    resultDiv.innerHTML = `<p style="color:var(--red);">❌ ${data.error || data.message || 'Ошибка активации'}</p>`;
+                    showToast('Ошибка активации', 'error');
+                }
+            } catch (e) {
+                document.getElementById('activation-result').innerHTML = `<p style="color:var(--red);">❌ ${e.message}</p>`;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '🔓 Активировать';
+            }
+        }
+
+        async function detectHWID() {
+            try {
+                // Пытаемся получить HWID через API или генерируем на основе браузера
+                const canvas = document.createElement('canvas');
+                const gl = canvas.getContext('webgl');
+                let hwid = '';
+                if (gl) {
+                    const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                    const vendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
+                    const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+                    hwid = btoa(`${vendor}|${renderer}|${navigator.hardwareConcurrency}|${screen.width}x${screen.height}`).substring(0, 64);
+                } else {
+                    hwid = btoa(`${navigator.userAgent}|${navigator.hardwareConcurrency}|${screen.width}x${screen.height}|${new Date().getTimezoneOffset()}`).substring(0, 64);
+                }
+                document.getElementById('hwid-input').value = hwid;
+                showToast('HWID определён', 'success');
+            } catch (e) {
+                const fallback = 'HWID-' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+                document.getElementById('hwid-input').value = fallback;
+                showToast('HWID сгенерирован (упрощённый)', 'info');
+            }
+        }
+
+        // ==================== ADMIN PANEL ====================
+        // Shift+A to toggle admin panel
+        document.addEventListener('keydown', function(e) {
+            if (e.shiftKey && e.key === 'A' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                e.preventDefault();
+                const panel = document.getElementById('admin-panel');
+                panel.classList.toggle('visible');
+                if (panel.classList.contains('visible')) {
+                    showToast('Админ-панель открыта', 'info');
+                } else {
+                    showToast('Админ-панель скрыта', 'info');
                 }
             }
-        };
+        });
 
-        document.getElementById('activateLicenseBtn').onclick = async () => {
-            const key = document.getElementById('licenseKeyInput').value.trim();
-            if(!key) { showToast('Введите ключ', true); return; }
-            if(!currentUser) { showToast('Вы не авторизованы', true); return; }
-            const res = await activateKey(currentUser.uid, key);
-            if(res.success) {
-                currentUser.license_expires = res.expires_at;
-                currentUser.group_name = 'premium';
-                localStorage.setItem('svendlc_current_user', JSON.stringify(currentUser));
-                updateProfileUI();
-                showToast('Ключ активирован!');
-                document.getElementById('licenseKeyInput').value = '';
-            } else {
-                showToast(res.error, true);
+        async function adminSearchUser() {
+            const uid = document.getElementById('admin-search-uid').value.trim();
+            if (!uid) { showToast('Введите UID для поиска', 'error'); return; }
+
+            const resultDiv = document.getElementById('admin-user-result');
+            resultDiv.innerHTML = '<span class="spinner"></span> Поиск...';
+
+            try {
+                const data = await apiCall(`/api/users/${uid}`);
+                const user = data.user || data;
+                resultDiv.innerHTML = `
+                    <div style="background:var(--surface2);padding:16px;border-radius:var(--radius-sm);border:1px solid var(--border);">
+                        <p><strong>UID:</strong> ${user.uid || user.id}</p>
+                        <p><strong>Логин:</strong> ${user.login || user.username || '-'}</p>
+                        <p><strong>Подписка:</strong> ${user.subscription || user.sub_type || '-'}</p>
+                        <p><strong>HWID:</strong> ${user.hwid || 'Не привязан'}</p>
+                        <p><strong>Статус:</strong> ${user.status || 'Активен'}</p>
+                        <p><strong>Дата:</strong> ${user.created_at || user.reg_date || '-'}</p>
+                        ${user.banned ? '<p style="color:var(--red);"><strong>ЗАБАНЕН</strong></p>' : ''}
+                    </div>
+                `;
+            } catch (e) {
+                resultDiv.innerHTML = `<p style="color:var(--red);">Пользователь не найден или ошибка</p>`;
             }
-        };
+        }
 
-        document.getElementById('logoutBtn').onclick = () => {
-            localStorage.removeItem('svendlc_current_user');
-            currentUser = null;
-            updateProfileUI();
-            document.getElementById('authModal').style.display = 'none';
-            showToast('Вы вышли');
-            loadPage('home');
-        };
+        async function adminCreateKeys() {
+            const type = document.getElementById('admin-key-type').value;
+            const count = parseInt(document.getElementById('admin-key-count').value) || 1;
 
-        // Админка
-        document.addEventListener('keydown', (e) => { if(e.shiftKey && e.key === 'A') document.getElementById('adminModal').style.display = 'flex'; });
-        document.getElementById('adminLoginBtn').onclick = async () => {
-            const pass = document.getElementById('adminPass').value;
-            if(pass === 'svenadmin') {
-                document.getElementById('adminPanel').style.display = 'block';
-                document.getElementById('adminLoginBtn').style.display = 'none';
-                showToast('Добро пожаловать в админ-панель');
-            } else {
-                showToast('Неверный пароль', true);
+            const resultDiv = document.getElementById('admin-keys-result');
+            resultDiv.innerHTML = '<span class="spinner"></span> Генерация ключей...';
+
+            try {
+                const data = await apiCall('/api/keys/create', 'POST', {
+                    sub_type: type,
+                    count: count
+                });
+                const keys = data.keys || [];
+                resultDiv.innerHTML = `
+                    <div style="background:var(--surface2);padding:16px;border-radius:var(--radius-sm);border:1px solid var(--border);">
+                        <p style="color:var(--green);">✅ Создано ключей: <strong>${keys.length}</strong></p>
+                        <div style="max-height:200px;overflow-y:auto;margin-top:8px;">
+                            ${keys.map(k => `<p style="font-family:monospace;font-size:13px;padding:4px 0;border-bottom:1px solid var(--border);">🔑 ${k}</p>`).join('')}
+                        </div>
+                    </div>
+                `;
+                showToast(`Создано ${keys.length} ключей`, 'success');
+            } catch (e) {
+                resultDiv.innerHTML = `<p style="color:var(--red);">❌ Ошибка: ${e.message}</p>`;
             }
-        };
-        document.getElementById('genKeyBtn').onclick = async () => {
-            const version = document.getElementById('keyVersion').value;
-            const res = await adminGenerateKey('svenadmin', version, 30);
-            if(res.success) {
-                document.getElementById('newKeyDisplay').innerHTML = `<strong>Ключ для ${version}:</strong><br><code style="background:#000;padding:5px;">${res.key}</code>`;
-                showToast(`Ключ создан!`);
-            } else {
-                showToast(res.error, true);
-            }
-        };
+        }
 
-        // Инициализация
-        const storedUser = localStorage.getItem('svendlc_current_user');
-        if(storedUser) { currentUser = JSON.parse(storedUser); updateProfileUI(); }
-        
-        document.querySelectorAll('.nav-link').forEach(link => link.onclick = (e) => { e.preventDefault(); loadPage(link.dataset.page); });
-        document.getElementById('supportBtn').onclick = (e) => { e.preventDefault(); document.getElementById('supportModal').style.display = 'flex'; };
-        document.getElementById('userBtn').onclick = () => { updateProfileUI(); document.getElementById('authModal').style.display = 'flex'; };
-        document.querySelectorAll('.close').forEach(btn => btn.onclick = () => { document.getElementById('supportModal').style.display = 'none'; document.getElementById('authModal').style.display = 'none'; document.getElementById('adminModal').style.display = 'none'; });
-        window.onclick = (e) => { if(e.target.classList.contains('modal')) e.target.style.display = 'none'; };
-        
-        loadPage('home');
+        // ==================== INIT ====================
+        // Автоопределение HWID при загрузке
+        window.addEventListener('DOMContentLoaded', () => {
+            detectHWID();
+            // Показываем главную вкладку
+            switchTab('home');
+        });
+
+        // Глобальные функции для onclick из HTML
+        window.switchTab = switchTab;
+        window.loadProfile = loadProfile;
+        window.loadVersions = loadVersions;
+        window.downloadSelectedVersion = downloadSelectedVersion;
+        window.activateKey = activateKey;
+        window.detectHWID = detectHWID;
+        window.adminSearchUser = adminSearchUser;
+        window.adminCreateKeys = adminCreateKeys;
+
+        console.log('%c⚔️ SvenDLC Client %c v3.0 %c Ready',
+            'color:#a855f7;font-size:20px;',
+            'color:#f59e0b;',
+            'color:#22c55e;');
+        console.log('%cAPI: %c' + API_BASE, 'color:#94a3b8;', 'color:#3b82f6;');
+        console.log('%cShift+A %c- Админ-панель', 'color:#f59e0b;', 'color:#94a3b8;');
     </script>
 </body>
 </html>
